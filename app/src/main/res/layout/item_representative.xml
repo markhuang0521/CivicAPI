@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="representative"
+            type="com.example.android.politicalpreparedness.representative.model.Representative" />
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:elevation="5dp"
+        app:cardCornerRadius="5dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <ImageView
+                android:id="@+id/representativePhoto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:srcCompat="@drawable/ic_profile" />
+
+            <TextView
+
+                android:id="@+id/officeName"
+                style="@style/TextAppearance.AppCompat.Body2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="8dp"
+                android:text="CA governor"
+                app:layout_constraintBottom_toTopOf="@+id/officialName"
+                app:layout_constraintStart_toEndOf="@+id/representativePhoto"
+                app:layout_constraintTop_toTopOf="@+id/representativePhoto" />
+
+            <TextView
+                android:id="@+id/officialName"
+                style="@style/TextAppearance.AppCompat.Body1"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="3dp"
+                android:text="mark"
+                app:layout_constraintBottom_toTopOf="@+id/officialParty"
+                app:layout_constraintStart_toEndOf="@+id/representativePhoto"
+                app:layout_constraintTop_toBottomOf="@+id/officeName" />
+
+
+            <TextView
+                android:id="@+id/officialParty"
+
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="democrate sdasd"
+                app:layout_constraintBottom_toBottomOf="@+id/representativePhoto"
+                app:layout_constraintStart_toEndOf="@+id/representativePhoto"
+                app:layout_constraintTop_toBottomOf="@+id/officialName" />
+
+            <ImageView
+                android:id="@+id/btnWeb"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="64dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                app:layout_constraintBottom_toBottomOf="@+id/officialParty"
+                app:layout_constraintEnd_toStartOf="@+id/btnFacebook"
+                app:layout_constraintStart_toEndOf="@id/officialParty"
+                app:layout_constraintTop_toTopOf="@+id/officialName"
+                app:srcCompat="@drawable/ic_www" />
+
+            <ImageView
+                android:id="@+id/btnFacebook"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                app:layout_constraintBottom_toBottomOf="@+id/btnWeb"
+                app:layout_constraintEnd_toStartOf="@+id/btnTwitter"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/btnWeb"
+                app:layout_constraintTop_toTopOf="@+id/btnWeb"
+                app:srcCompat="@drawable/ic_facebook" />
+
+            <ImageView
+                android:id="@+id/btnTwitter"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                app:layout_constraintBottom_toBottomOf="@+id/btnFacebook"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/btnFacebook"
+                app:layout_constraintTop_toTopOf="@+id/btnFacebook"
+                app:srcCompat="@drawable/ic_twitter" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</layout>
