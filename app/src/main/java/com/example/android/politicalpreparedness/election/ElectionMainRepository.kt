@@ -27,10 +27,12 @@ class ElectionMainRepository(private val electionDao: ElectionDao,
 
     override suspend fun refreshElection() = withContext(ioDispatcher) {
         deleteNotSaveElection()
-        val electionResponse: ElectionResponse = civicsApi.getElections()
 
+        val electionResponse: ElectionResponse = civicsApi.getElections()
         val elections = electionResponse.elections
         electionDao.insertElections(elections)
+    
+
     }
 
 

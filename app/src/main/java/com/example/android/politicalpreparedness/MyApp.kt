@@ -6,9 +6,12 @@ import com.example.android.politicalpreparedness.database.ElectionDatabase
 import com.example.android.politicalpreparedness.database.ElectionMainRepository
 import com.example.android.politicalpreparedness.election.ElectionsViewModel
 import com.example.android.politicalpreparedness.election.VoterInfoViewModel
-import com.example.android.politicalpreparedness.network.BASE_URL
 import com.example.android.politicalpreparedness.network.CivicsApiService
 import com.example.android.politicalpreparedness.network.CivicsHttpClient
+import com.example.android.politicalpreparedness.network.jsonadapter.ElectionAdapter
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
@@ -18,6 +21,7 @@ import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import timber.log.Timber
+import java.util.*
 
 class MyApp : Application() {
     override fun onCreate() {
@@ -46,13 +50,18 @@ class MyApp : Application() {
 
 
             single<Converter.Factory>(named("moshi")) {
-                MoshiConverterFactory.create()
+                val moshi = Moshi.Builder()
+                        .add(KotlinJsonAdapterFactory())
+                        .add(Date::class.java, Rfc3339DateJsonAdapter())
+                        .add(ElectionAdapter())
+                        .build()
+                MoshiConverterFactory.create(moshi)
             }
 
 
             single {
                 Retrofit.Builder()
-                        .baseUrl(BASE_URL)
+                        .baseUrl("https://www.googleapis.com/civicinfo/v2/")
                         .client(get())
                         .addConverterFactory(get(named("moshi")))
                         .build()

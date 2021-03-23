@@ -33,7 +33,6 @@
         <argument
             android:name="election"
             app:argType="com.example.android.politicalpreparedness.network.models.Election" />
-
     </fragment>
     <fragment
         android:id="@+id/electionsFragment"

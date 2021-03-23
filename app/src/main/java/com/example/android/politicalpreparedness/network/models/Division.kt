@@ -9,7 +9,7 @@ data class Division(
         val country: String,
         val state: String
 ) : Parcelable {
-    fun formatAddress(): String {
-        return String.format("%s,%s", state, country)
-    }
+//    fun formatAddress(): String {
+//        return String.format("%s,%s", state, country)
+//    }
 }

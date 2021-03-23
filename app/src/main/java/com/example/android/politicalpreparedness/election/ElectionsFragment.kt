@@ -55,6 +55,7 @@ class ElectionsFragment : BaseFragment() {
     private fun setupObserver() {
         _viewModel.nagivateToVoterInfo.observe(viewLifecycleOwner, Observer {
             _viewModel.nagivateToVoterInfo?.let { election ->
+
                 findNavController().navigate(ElectionsFragmentDirections.actionElectionsFragmentToVoterInfoFragment(election.value!!))
             }
         })
