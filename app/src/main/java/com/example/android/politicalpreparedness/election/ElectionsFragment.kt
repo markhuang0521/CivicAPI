@@ -18,7 +18,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ElectionsFragment : BaseFragment() {
 
-    //TODO: Declare ViewModel
     private lateinit var binding: FragmentElectionBinding
     override val _viewModel: ElectionsViewModel by viewModel()
     private lateinit var upcomingAdapter: ElectionListAdapter
@@ -45,7 +44,6 @@ class ElectionsFragment : BaseFragment() {
         setupObserver()
     }
 
-    //TODO: Refresh adapters when fragment loads
 
     private fun setupObserver() {
         _viewModel.nagivateToVoterInfo.observe(viewLifecycleOwner, Observer { election ->
