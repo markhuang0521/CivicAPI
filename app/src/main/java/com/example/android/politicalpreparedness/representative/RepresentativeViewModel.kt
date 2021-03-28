@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.android.politicalpreparedness.base.BaseViewModel
+import com.example.android.politicalpreparedness.base.SingleLiveEvent
 import com.example.android.politicalpreparedness.database.ElectionDataSource
 import com.example.android.politicalpreparedness.database.Result
 import com.example.android.politicalpreparedness.network.models.Address
@@ -15,6 +16,7 @@ class RepresentativeViewModel(app: Application, private val repository: Election
 
     val representatives = MutableLiveData<List<Representative>>()
     val address = MutableLiveData<Address>()
+    val locationBtnEvent = SingleLiveEvent<Boolean>()
 
     fun loadRepresentatives(address: String) {
         showLoading.value = true
@@ -43,14 +45,15 @@ class RepresentativeViewModel(app: Application, private val repository: Election
         showNoData.value = representatives.value == null || representatives.value!!.isEmpty()
     }
 
+    fun onClear() {
+        address.value = null
+        representatives.value = null
+    }
+
 
     //TODO: Establish live data for representatives and address
 
     //TODO: Create function to fetch representatives from API from a provided address
 
-
-    //TODO: Create function get address from geo location
-
-    //TODO: Create function to get address from individual fields
 
 }

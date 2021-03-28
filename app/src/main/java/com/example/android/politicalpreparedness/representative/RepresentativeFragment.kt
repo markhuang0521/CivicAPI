@@ -4,11 +4,14 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
+import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
+import android.os.Looper
 import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
@@ -24,22 +27,28 @@ import com.example.android.politicalpreparedness.base.BaseFragment
 import com.example.android.politicalpreparedness.databinding.FragmentRepresentativeBinding
 import com.example.android.politicalpreparedness.network.models.Address
 import com.example.android.politicalpreparedness.representative.adapter.RepresentativeListAdapter
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.*
 import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 import java.util.*
 
 class RepresentativeFragment : BaseFragment() {
 
     companion object {
         const val Location_PERMISSIONS_REQUEST_CODE = 101
+        const val REQUEST_TURN_DEVICE_LOCATION_ON = 202
+
     }
 
     override val _viewModel: RepresentativeViewModel by viewModel()
     private lateinit var binding: FragmentRepresentativeBinding
     private lateinit var representativeAdapter: RepresentativeListAdapter
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var locationCallback: LocationCallback
+    private lateinit var locationRequest: LocationRequest
+    private var currentLocation: Location? = null
 
 
     override fun onCreateView(inflater: LayoutInflater,
@@ -49,7 +58,6 @@ class RepresentativeFragment : BaseFragment() {
         //TODO: Establish bindings
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_representative, container, false)
         binding.viewModel = _viewModel
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
         return binding.root
 
@@ -58,8 +66,11 @@ class RepresentativeFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = this
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+        setupLocationClientAndCallback()
         setUpRecyclerView()
         setUpObserver()
+        checkDeviceLocationSettings()
         binding.buttonSearch.setOnClickListener {
             if (validateAddress()) {
                 _viewModel.address.value?.let {
@@ -75,6 +86,19 @@ class RepresentativeFragment : BaseFragment() {
         }
     }
 
+    private fun setupLocationClientAndCallback() {
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+        locationRequest = LocationRequest().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult?) {
+                locationResult ?: return
+                for (location in locationResult.locations) {
+                    currentLocation = location
+                }
+            }
+        }
+    }
 
     private fun setUpRecyclerView() {
         representativeAdapter = RepresentativeListAdapter()
@@ -92,11 +116,7 @@ class RepresentativeFragment : BaseFragment() {
                 representativeAdapter.submitList(it)
             }
         })
-        _viewModel.address.observe(viewLifecycleOwner, Observer {
-            it?.let {
 
-            }
-        })
 
     }
 
@@ -170,9 +190,16 @@ class RepresentativeFragment : BaseFragment() {
         return false
     }
 
+    private fun isLocationServiceOn(): Boolean {
+
+        val locationManager = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+    }
+
+
     @SuppressLint("MissingPermission")
     private fun getLocationToAddress() {
-        if (checkLocationPermissions()) {
+        if (checkLocationPermissions() && isLocationServiceOn()) {
             fusedLocationClient.lastLocation
                     .addOnSuccessListener { location: Location? ->
                         if (location != null) {
@@ -180,12 +207,22 @@ class RepresentativeFragment : BaseFragment() {
 
 
                         } else {
-                            _viewModel.showErrorMessage.postValue("location not found")
+                            if (currentLocation != null) {
+                                _viewModel.address.value = geoCodeLocation(currentLocation!!)
+
+                            } else {
+                                _viewModel.showErrorMessage.postValue("location not found ")
+                            }
                         }
 
                     }
+        } else {
+            _viewModel.showErrorMessage.postValue("  please check if GPS is ON! ")
+
+
         }
     }
+
 
     private fun geoCodeLocation(location: Location): Address {
         val geocoder = Geocoder(context, Locale.getDefault())
@@ -200,5 +237,57 @@ class RepresentativeFragment : BaseFragment() {
         val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view!!.windowToken, 0)
     }
+
+    override fun onResume() {
+        super.onResume()
+        if (checkLocationPermissions() && isLocationServiceOn()) startLocationUpdates()
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun startLocationUpdates() {
+        fusedLocationClient.requestLocationUpdates(locationRequest,
+                locationCallback,
+                Looper.getMainLooper())
+    }
+
+
+    private fun checkDeviceLocationSettings(resolve: Boolean = true) {
+
+        val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
+
+        val settingsClient = LocationServices.getSettingsClient(requireActivity())
+        val locationSettingsResponseTask =
+                settingsClient.checkLocationSettings(builder.build())
+
+        locationSettingsResponseTask.addOnFailureListener { exception ->
+            if (exception is ResolvableApiException && resolve) {
+                // Location settings are not satisfied, but this can be fixed
+                // by showing the user a dialog.
+                try {
+                    // Show the dialog by calling startResolutionForResult(),
+                    // and check the result in onActivityResult().
+                    exception.startResolutionForResult(
+                            requireActivity(),
+                            REQUEST_TURN_DEVICE_LOCATION_ON
+                    )
+                } catch (sendEx: IntentSender.SendIntentException) {
+                    Timber.i("Error geting location settings resolution: " + sendEx.message)
+                }
+            } else {
+                Snackbar.make(
+                        requireView(),
+                        R.string.location_required_error, Snackbar.LENGTH_INDEFINITE
+                ).setAction(android.R.string.ok) {
+                    checkDeviceLocationSettings()
+                }.show()
+            }
+        }
+        locationSettingsResponseTask.addOnCompleteListener {
+            if (it.isSuccessful) {
+                startLocationUpdates()
+            }
+        }
+    }
+
 
 }
