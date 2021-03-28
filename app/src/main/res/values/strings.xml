@@ -2,6 +2,24 @@
 <resources>
     <string name="app_name">Political Preparedness</string>
     <string name="no_data">No Data</string>
+    <string name="election_information">Election Information</string>
+    <string name="ballot_information"><u>Ballot Information</u></string>
+    <string name="no_ballot_information_available"><u>Ballot Not Available</u></string>
+    <string name="voting_locations"><u>Voting Location</u></string>
+    <string name="no_voting_locations_available"><u>NO Voting Location Available</u></string>
+    <string name="correspondence_address">Correspondence Address</string>
+    <string name="no_address_found">No Address Found</string>
+    <string name="follow_election">follow</string>
+    <string name="unfollow_election">unfollow</string>
+    <string name="representative_search">Representative Search</string>
+    <string name="address_line_1">address 1</string>
+    <string name="permission_denied_explanation">Permission is needed for this App</string>
+    <string name="settings">Settings</string>
+    <string name="address_line_2">address 2</string>
+    <string name="city">City</string>
+    <string name="state">State</string>
+    <string name="zip">Zip Code</string>
+    <string name="my_representatives">My Representatives</string>
 
     <!-- TODO: Add necessary string values -->
 

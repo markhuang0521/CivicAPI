@@ -6,13 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.android.politicalpreparedness.R
 import com.example.android.politicalpreparedness.base.BaseFragment
+import com.example.android.politicalpreparedness.base.NavigationCommand
 import com.example.android.politicalpreparedness.databinding.FragmentElectionBinding
 import com.example.android.politicalpreparedness.election.adapter.ElectionListAdapter
 import com.example.android.politicalpreparedness.election.adapter.ElectionListener
+import com.example.android.politicalpreparedness.utils.setDisplayHomeAsUpEnabled
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ElectionsFragment : BaseFragment() {
@@ -20,6 +21,8 @@ class ElectionsFragment : BaseFragment() {
     //TODO: Declare ViewModel
     private lateinit var binding: FragmentElectionBinding
     override val _viewModel: ElectionsViewModel by viewModel()
+    private lateinit var upcomingAdapter: ElectionListAdapter
+    private lateinit var saveAdapter: ElectionListAdapter
 
 
     override fun onCreateView(inflater: LayoutInflater,
@@ -27,16 +30,9 @@ class ElectionsFragment : BaseFragment() {
                               savedInstanceState: Bundle?): View? {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_election, container, false)
+        binding.viewModel = _viewModel
+        setDisplayHomeAsUpEnabled(true)
 
-        //TODO: Add ViewModel values and create ViewModel
-
-        //TODO: Add binding values
-
-        //TODO: Link elections to voter info
-
-        //TODO: Initiate recycler adapters
-
-        //TODO: Populate recycler adapters
         return binding.root
 
     }
@@ -44,7 +40,6 @@ class ElectionsFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = this
-        binding.viewModel = _viewModel
 
         setUpRecyclerView()
         setupObserver()
@@ -53,19 +48,37 @@ class ElectionsFragment : BaseFragment() {
     //TODO: Refresh adapters when fragment loads
 
     private fun setupObserver() {
-        _viewModel.nagivateToVoterInfo.observe(viewLifecycleOwner, Observer {
-            _viewModel.nagivateToVoterInfo?.let { election ->
+        _viewModel.nagivateToVoterInfo.observe(viewLifecycleOwner, Observer { election ->
+            if (election == null) {
 
-                findNavController().navigate(ElectionsFragmentDirections.actionElectionsFragmentToVoterInfoFragment(election.value!!))
+            }
+            election?.let {
+//                findNavController().navigate(ElectionsFragmentDirections.actionElectionsFragmentToVoterInfoFragment(election))
+                _viewModel.navigationCommand.postValue(
+                        NavigationCommand.To(
+                                ElectionsFragmentDirections.actionElectionsFragmentToVoterInfoFragment(election)
+                        )
+                )
+            }
+
+        })
+        _viewModel.upcomingElections.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                upcomingAdapter.submitList(it)
+            }
+        })
+        _viewModel.saveElections.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                saveAdapter.submitList(it)
             }
         })
     }
 
     private fun setUpRecyclerView() {
-        val upcomingAdapter = ElectionListAdapter(ElectionListener {
+        upcomingAdapter = ElectionListAdapter(ElectionListener {
             _viewModel.onElectionSelect(it)
         })
-        val saveAdapter = ElectionListAdapter(ElectionListener {
+        saveAdapter = ElectionListAdapter(ElectionListener {
             _viewModel.onElectionSelect(it)
         })
         binding.recyclerSaveElection.apply {
@@ -76,6 +89,12 @@ class ElectionsFragment : BaseFragment() {
             layoutManager = LinearLayoutManager(context)
             adapter = upcomingAdapter
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        _viewModel.loadUpcomingElections()
+        _viewModel.loadSaveElections()
     }
 
 

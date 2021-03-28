@@ -17,34 +17,60 @@
         tools:context="com.example.android.politicalpreparedness.MainActivity">
 
 
-        <TextView
-            android:id="@+id/text_saveElections"
-            style="@style/TextAppearance.AppCompat.Light.SearchResult.Title"
-            android:layout_width="0dp"
+        <ProgressBar
+
+            android:id="@+id/progressBar"
+            progressBarVisible="@{viewModel.showLoading.booleanValue()}"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginEnd="32dp"
-            android:gravity="center"
-            android:text="Save Elections"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/red"
+            app:layout_constraintBottom_toTopOf="@id/text_saveElections"
+
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
 
         <TextView
             android:id="@+id/text_upcomingElections"
             style="@style/TextAppearance.AppCompat.Light.SearchResult.Title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="32dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="8dp"
+            android:background="@color/cursorAccent"
             android:gravity="center"
+            android:padding="3dp"
             android:text="UpComing Elections"
+            android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/text_saveElections"
+
+            style="@style/TextAppearance.AppCompat.Light.SearchResult.Title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@color/blue"
+            android:gravity="center"
+            android:padding="3dp"
+            android:text="Save Elections"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.538" />
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_upcomingElection"
@@ -73,7 +99,7 @@
         <TextView
             android:id="@+id/noDataTextView"
             style="@style/TextAppearance.AppCompat.SearchResult.Title"
-            isVisible="@{viewModel.saveElections}"
+            isVisible="@{viewModel.showNoData.booleanValue()}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="64dp"

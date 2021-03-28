@@ -24,6 +24,7 @@
 
             <ImageView
                 android:id="@+id/representativePhoto"
+                profileImage="@{representative.official.photoUrl}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -35,43 +36,43 @@
                 tools:srcCompat="@drawable/ic_profile" />
 
             <TextView
-
                 android:id="@+id/officeName"
                 style="@style/TextAppearance.AppCompat.Body2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginBottom="8dp"
-                android:text="CA governor"
+                android:text="@{representative.office.name}"
                 app:layout_constraintBottom_toTopOf="@+id/officialName"
                 app:layout_constraintStart_toEndOf="@+id/representativePhoto"
-                app:layout_constraintTop_toTopOf="@+id/representativePhoto" />
+                app:layout_constraintTop_toTopOf="@+id/representativePhoto"
+                tools:text="president" />
 
             <TextView
                 android:id="@+id/officialName"
                 style="@style/TextAppearance.AppCompat.Body1"
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginBottom="3dp"
-                android:text="mark"
+                android:text="@{representative.official.name}"
                 app:layout_constraintBottom_toTopOf="@+id/officialParty"
                 app:layout_constraintStart_toEndOf="@+id/representativePhoto"
-                app:layout_constraintTop_toBottomOf="@+id/officeName" />
+                app:layout_constraintTop_toBottomOf="@+id/officeName"
+                tools:text="mark" />
 
 
             <TextView
                 android:id="@+id/officialParty"
-
                 style="@style/TextAppearance.AppCompat.Body1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:text="democrate sdasd"
+                android:text="@{representative.official.party}"
                 app:layout_constraintBottom_toBottomOf="@+id/representativePhoto"
                 app:layout_constraintStart_toEndOf="@+id/representativePhoto"
-                app:layout_constraintTop_toBottomOf="@+id/officialName" />
+                app:layout_constraintTop_toBottomOf="@+id/officialName"
+                tools:text="democrate" />
 
             <ImageView
                 android:id="@+id/btnWeb"

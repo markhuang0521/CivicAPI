@@ -9,7 +9,7 @@ interface ElectionDataSource {
     suspend fun getUpcomingElection(): List<Election>
     suspend fun getSaveElection(): List<Election>
     suspend fun getVoterInfo(address: String, electionId: Int): VoterInfoResponse
-    suspend fun getRepresentative(address: String): List<Representative>
+    suspend fun getRepresentative(address: String): Result<List<Representative>>
     suspend fun saveElection(election: Election)
     suspend fun deleteNotSaveElection()
     suspend fun refreshElection()

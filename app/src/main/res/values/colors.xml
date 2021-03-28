@@ -5,4 +5,11 @@
     <color name="colorAccent">#82d9c8</color>
     <color name="white">#FFFFFF</color>
     <color name="gray50">#7F7F7F</color>
+    <color name="cursorAccent">#03A9F4</color>
+    <color name="controlNormal">#FAF0EF
+    </color>
+    <color name="controlActivated">#03A9F4</color>
+    <color name="blue">#2495C8</color>
+    <color name="red">#E91E63</color>
+    <color name="green">#4CAF50</color>
 </resources>

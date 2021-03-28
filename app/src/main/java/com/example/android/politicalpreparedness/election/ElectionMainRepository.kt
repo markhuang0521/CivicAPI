@@ -21,7 +21,7 @@ class ElectionMainRepository(private val electionDao: ElectionDao,
 
     override suspend fun getSaveElection(): List<Election> = withContext(ioDispatcher) {
 
-        return@withContext (electionDao.getUpcomingElections(getToday()))
+        return@withContext (electionDao.getSavedElections())
 
     }
 
@@ -31,7 +31,7 @@ class ElectionMainRepository(private val electionDao: ElectionDao,
         val electionResponse: ElectionResponse = civicsApi.getElections()
         val elections = electionResponse.elections
         electionDao.insertElections(elections)
-    
+
 
     }
 
@@ -41,18 +41,18 @@ class ElectionMainRepository(private val electionDao: ElectionDao,
     }
 
 
-    override suspend fun getRepresentative(address: String): List<Representative> = withContext(ioDispatcher) {
-
-
-        val response = civicsApi.getRepresentativesByAddress(address)
-        val offices = response.offices
-        val officials = response.officials
-        val representatives = offices.flatMap { office -> office.getRepresentatives(officials) }
-
-        return@withContext representatives
-
-
+    override suspend fun getRepresentative(address: String): Result<List<Representative>> = withContext(ioDispatcher) {
+        return@withContext try {
+            val response = civicsApi.getRepresentativesByAddress(address)
+            val offices = response.offices
+            val officials = response.officials
+            val representatives = offices.flatMap { office -> office.getRepresentatives(officials) }
+            Result.Success(representatives)
+        } catch (ex: Exception) {
+            Result.Error(ex.localizedMessage)
+        }
     }
+
 
     override suspend fun saveElection(election: Election) = withContext(ioDispatcher)
     {

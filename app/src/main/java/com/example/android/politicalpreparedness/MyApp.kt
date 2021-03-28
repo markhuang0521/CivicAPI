@@ -6,9 +6,11 @@ import com.example.android.politicalpreparedness.database.ElectionDatabase
 import com.example.android.politicalpreparedness.database.ElectionMainRepository
 import com.example.android.politicalpreparedness.election.ElectionsViewModel
 import com.example.android.politicalpreparedness.election.VoterInfoViewModel
+import com.example.android.politicalpreparedness.network.BASE_URL
 import com.example.android.politicalpreparedness.network.CivicsApiService
 import com.example.android.politicalpreparedness.network.CivicsHttpClient
 import com.example.android.politicalpreparedness.network.jsonadapter.ElectionAdapter
+import com.example.android.politicalpreparedness.representative.RepresentativeViewModel
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -35,6 +37,12 @@ class MyApp : Application() {
                         get() as ElectionDataSource
                 )
             }
+            viewModel {
+                RepresentativeViewModel(
+                        get(),
+                        get() as ElectionDataSource
+                )
+            }
             //Declare singleton definitions to be later injected using by inject()
             single {
                 //This view model is declared singleton to be used across multiple fragments
@@ -51,9 +59,9 @@ class MyApp : Application() {
 
             single<Converter.Factory>(named("moshi")) {
                 val moshi = Moshi.Builder()
+                        .add(ElectionAdapter())
                         .add(KotlinJsonAdapterFactory())
                         .add(Date::class.java, Rfc3339DateJsonAdapter())
-                        .add(ElectionAdapter())
                         .build()
                 MoshiConverterFactory.create(moshi)
             }
@@ -61,7 +69,7 @@ class MyApp : Application() {
 
             single {
                 Retrofit.Builder()
-                        .baseUrl("https://www.googleapis.com/civicinfo/v2/")
+                        .baseUrl(BASE_URL)
                         .client(get())
                         .addConverterFactory(get(named("moshi")))
                         .build()

@@ -4,9 +4,10 @@
 
     <data>
 
-<variable
-    name="clickListener"
-    type="com.example.android.politicalpreparedness.election.adapter.ElectionListener" />
+        <variable
+            name="clickListener"
+            type="com.example.android.politicalpreparedness.election.adapter.ElectionListener" />
+
         <variable
             name="election"
             type="com.example.android.politicalpreparedness.network.models.Election" />
@@ -17,6 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:elevation="5dp"
+        android:onClick="@{()->clickListener.onclick(election)}"
         app:cardCornerRadius="5dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout

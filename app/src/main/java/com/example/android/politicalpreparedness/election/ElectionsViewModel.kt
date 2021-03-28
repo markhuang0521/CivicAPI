@@ -24,8 +24,7 @@ class ElectionsViewModel(app: Application, private val repository: ElectionDataS
             repository.refreshElection()
 
         }
-        loadUpcomingElections()
-        loadSaveElections()
+
     }
 
 
@@ -34,16 +33,19 @@ class ElectionsViewModel(app: Application, private val repository: ElectionDataS
         viewModelScope.launch {
             upcomingElections.value = repository.getUpcomingElection()
             showLoading.postValue(false)
+
             invalidateShowNoData()
+
 
         }
     }
 
     fun loadSaveElections() {
-        showLoading2.value = true
+        showLoading.value = true
+
         viewModelScope.launch {
-            upcomingElections.value = repository.getSaveElection()
-            showLoading2.postValue(false)
+            saveElections.value = repository.getSaveElection()
+            showLoading.postValue(false)
             invalidateShowNoData()
 
         }
@@ -51,17 +53,6 @@ class ElectionsViewModel(app: Application, private val repository: ElectionDataS
 
     fun onElectionSelect(election: Election) {
         nagivateToVoterInfo.value = election
-    }
-
-    fun saveElection(election: Election) {
-        showLoading.value = true
-
-        viewModelScope.launch {
-            repository.saveElection(election)
-            showLoading.postValue(false)
-
-
-        }
     }
 
 
