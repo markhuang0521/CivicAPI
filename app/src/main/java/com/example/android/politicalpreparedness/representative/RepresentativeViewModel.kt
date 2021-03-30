@@ -51,9 +51,5 @@ class RepresentativeViewModel(app: Application, private val repository: Election
     }
 
 
-    //TODO: Establish live data for representatives and address
-
-    //TODO: Create function to fetch representatives from API from a provided address
-
 
 }

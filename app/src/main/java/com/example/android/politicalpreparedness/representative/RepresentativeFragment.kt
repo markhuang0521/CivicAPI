@@ -27,6 +27,7 @@ import com.example.android.politicalpreparedness.base.BaseFragment
 import com.example.android.politicalpreparedness.databinding.FragmentRepresentativeBinding
 import com.example.android.politicalpreparedness.network.models.Address
 import com.example.android.politicalpreparedness.representative.adapter.RepresentativeListAdapter
+import com.example.android.politicalpreparedness.utils.setDisplayHomeAsUpEnabled
 import com.example.android.politicalpreparedness.utils.setTitle
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
@@ -56,10 +57,11 @@ class RepresentativeFragment : BaseFragment() {
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        //TODO: Establish bindings
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_representative, container, false)
         binding.viewModel = _viewModel
         setTitle("Representative Search")
+        setDisplayHomeAsUpEnabled(true)
+
         return binding.root
 
     }
@@ -241,7 +243,7 @@ class RepresentativeFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        if (checkLocationPermissions() && isLocationServiceOn()) startLocationUpdates()
+//        if (checkLocationPermissions() && isLocationServiceOn()) startLocationUpdates()
     }
 
     @SuppressLint("MissingPermission")

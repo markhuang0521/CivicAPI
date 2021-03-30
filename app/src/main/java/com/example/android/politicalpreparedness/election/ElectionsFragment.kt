@@ -14,11 +14,11 @@ import com.example.android.politicalpreparedness.databinding.FragmentElectionBin
 import com.example.android.politicalpreparedness.election.adapter.ElectionListAdapter
 import com.example.android.politicalpreparedness.election.adapter.ElectionListener
 import com.example.android.politicalpreparedness.utils.setDisplayHomeAsUpEnabled
+import com.example.android.politicalpreparedness.utils.setTitle
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ElectionsFragment : BaseFragment() {
 
-    //TODO: Declare ViewModel
     private lateinit var binding: FragmentElectionBinding
     override val _viewModel: ElectionsViewModel by viewModel()
     private lateinit var upcomingAdapter: ElectionListAdapter
@@ -32,6 +32,7 @@ class ElectionsFragment : BaseFragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_election, container, false)
         binding.viewModel = _viewModel
         setDisplayHomeAsUpEnabled(true)
+        setTitle("Future Elections")
 
         return binding.root
 

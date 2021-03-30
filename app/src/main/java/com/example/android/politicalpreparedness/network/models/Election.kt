@@ -18,4 +18,8 @@ data class Election(
         @Embedded(prefix = "division_") @Json(name = "ocdDivisionId") val division: Division,
         var isSaved: Boolean = false
 
-) : Parcelable
+) : Parcelable {
+    fun asSaveElection(): SaveElection {
+        return SaveElection(id, name, electionDay, division, isSaved)
+    }
+}

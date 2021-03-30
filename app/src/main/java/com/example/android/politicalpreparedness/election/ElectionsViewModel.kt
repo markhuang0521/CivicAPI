@@ -25,6 +25,7 @@ class ElectionsViewModel(app: Application, private val repository: ElectionDataS
 
         }
 
+
     }
 
 
