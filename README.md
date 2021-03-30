@@ -19,7 +19,7 @@ It leverages the following components from the Jetpack library:
 
 
 ## Screen Shots
-<img src="./screenshots/civicApi.gif" alt="Project GIF" >
+<img src="./screenshots/civicApi.gif" alt="Project GIF" width="350"  >
 
 
 
